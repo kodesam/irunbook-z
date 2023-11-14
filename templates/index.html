@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI Playground Integration</title>
+</head>
+<body>
+    <div>
+        <h1>OpenAI Playground Integration</h1>
+        <form id="inputForm">
+            <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+            <input type="text" id="instruction" placeholder="Enter instruction...">
+            <select id="model">
+                <option value="text-davinci-002">Text Davinci 002</option>
+                <!-- Add other model options as needed -->
+            </select>
+            <button type="button" onclick="generateResponse()">Generate Response</button>
+        </form>
+        <div id="outputText"></div>
+    </div>
+
+    <script>
+        function generateResponse() {
+            var inputText = document.getElementById('inputText').value;
+            var instruction = document.getElementById('instruction').value;
+            var model = document.getElementById('model').value;
+
+            // Make a POST request to the Flask server
+            fetch('/generate_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `inputText=${encodeURIComponent(inputText)}&instruction=${encodeURIComponent(instruction)}&model=${encodeURIComponent(model)}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the generated text in the outputText div
+                document.getElementById('outputText').innerText = data.generatedText;
+            });
+        }
+    </script>
+</body>
+</html>
